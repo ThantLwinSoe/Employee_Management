@@ -1,0 +1,76 @@
+<div class="container mt-3">
+    <div class="row">
+        <h3 class="col-1 me-3 text-danger  form-label d-inline-flex ">Search</h3>
+        <input [(ngModel)]="filterResult" class="col mx-3  d-inline-flex form-control  " type="search" placeholder="Search Employee">
+        <button [routerLink]="['form']" class="col-2 ms-1 btn btn-outline-info">Add Employee</button>
+    </div>
+
+    <!--Pagination  no.rule-->
+    <div class="row mt-5 justify-content-end">
+        <div class="col-2">
+            <label class="forml-label"><h4 class="text-info">Numbers of Role</h4></label>
+        </div>
+        <div class="col-3 ">
+            <select class="form-select form-select-sm" (change)="onTableSizeChange($event)">
+                <option *ngFor="let item of totalSize" [ngValue]="item">{{item}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container mt-5 ">
+        <div class="row ">
+            <div class="col">
+                <table class="table">
+                    <thead class="table-secondary ">
+                        <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Regi_Date</th>
+                            <th>City</th>
+                            <th>Gender</th>
+                            <th>NRC</th>
+                            <th>Skills</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of allEmployee 
+                        | serachfilter:filterResult
+                        | paginate: pagingConfig">
+                            <td>{{item.id}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.mail}}</td>
+                            <td>{{item.address}}</td>
+                            <td>{{item.dob}}</td>
+                            <td>{{item.city}}</td>
+                            <td>{{item.gender}}</td>
+                            <td>{{item.nrc}}</td>
+                            <td>{{item.skill}}</td>
+                            <td>
+                                <button [routerLink]="['form',item.id]" class="btn btn-outline-success">Edit</button>
+                                <button class="ms-1 btn btn-outline-danger" (click)="deleteEmployee(item.id)">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row mt-5 justify-content-center  ">
+                    <div class=" col-3 ">
+                    <pagination-controls 
+                        previousLabel="Prev"
+                        nextLabel="Next"
+                        (pageChange)="onTableDataChange($event)"
+                    ></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+
+</div>
+
+

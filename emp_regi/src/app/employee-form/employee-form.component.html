@@ -1,0 +1,158 @@
+<div class="container mt-4 w-75">
+    <div class="row ">
+        <div class="col ">
+            <div class="card shadow ">
+                <div class="card-body ">
+                    <div class="card-text ">
+                        <form [formGroup]="myForm" >
+                        <!--User Name-->
+                        <div class="row mt-4  ">
+                            <div class="col">
+                                <label class="form-label" >Employee Name</label>
+                                <input formControlName="name" type="text" class="form-control" placeholder="Employee Name">
+                                @if (myForm.get('name')?.hasError('required') && myForm.get('name')?.touched) {
+                                    <div class="text-danger">* Name is required</div>
+                                }
+                            </div>
+                            <!--Email-->
+                            <div class="col">
+                                <label class="form-label ">Email</label>
+                                <input formControlName="mail" type="email" class="form-control" placeholder="Email">
+                                @if (myForm.get('mail')?.hasError('required') && myForm.get('mail')?.touched) {
+                                    <div class="text-danger">* Email is required</div>
+                                }
+                            </div>
+                            <!--Date Of Birth-->
+                            <div class="col ">
+                                <label class="form-label">Date of Birth</label>
+                                <input formControlName="dob" type="date" class="form-control">
+                                @if(myForm.get('dob')?.hasError('required') && myForm.get('dob')?.touched) {
+                                    <div class="text-danger">* Date is required</div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <!--Address-->
+                            <div class="col">
+                                <label class="form-label ">Address</label>
+                                <textarea formControlName="address" class="form-control " placeholder="Address Here" ></textarea>
+                                @if(myForm.get('address')?.hasError('required') && myForm.get('address')?.touched) {
+                                    <div class="text-danger">* Address is required</div>
+                                }
+                            </div>
+                            <!--Skills-->
+                            <div class="col ">
+                                <label class="form-label ">Skills</label><br>
+                                
+                                <div *ngFor="let item of showSkills ; index as i" class="form-check form-check-inline">
+                                    <input
+                                    [checked]="skillMatch(item)"
+                                    type="checkbox" 
+                                    class="form-check-input"
+                                    [value]="item"
+                                    (click)="addRemoveSkill($event,item)"
+                                    >
+                                    <label class="form-check-label">{{item}}</label>
+                                </div>
+                                @if(checkBoxRequired) {
+                                    <div class="text-danger">* Please mark one</div>
+                                }
+                            </div>   
+                        </div>
+
+                        <div class="row mt-4 ">
+                            <!--NRC-->
+                            <div class="col">
+                                <label class="form-label">NRC</label>
+                                <input formControlName="nrc" type="text" class="form-control" placeholder="NRC">
+                                @if(myForm.get('nrc')?.hasError('required') && myForm.get('nrc')?.touched) {
+                                    <div class="text-danger">* NRC is required</div>
+                                }
+                            </div>
+                            <!--City-->
+                            <div class="col">
+                                <label class="form-label ">City</label>
+                                <select formControlName="city" class="form-select">
+                                    <option >Select City</option>
+                                    <option *ngFor="let cy of citys">{{cy}}</option>
+                                </select>
+                                @if(myForm.get('city')?.hasError('required') && myForm.get('city')?.status) {
+                                    <div class="text-danger">* City is required</div>
+                                }
+                            </div>
+                            <!--Gender-->
+                            <div class="col">
+                                <label class="form-label">Gender</label><br>
+                                <div class="form-check form-check-inline ">
+                                    <input 
+                                    type="radio" 
+                                    class="form-check-input"
+                                    formControlName="gender"
+                                    [value]="'MALE'"
+                                    [checked]="genderCheck === 'MALE'"
+                                    (click)="genderMale($event.AT_TARGET.valueOf)"
+                                    >
+                                    <label class="form-check-label">Male</label>
+                                </div>
+                                <div class="form-check form-check-inline ">
+                                    <input 
+                                    type="radio"
+                                    class="form-check-input "
+                                    formControlName="gender"
+                                    [value]="'FEMALE'"
+                                    [checked]="genderCheck === 'FEMALE'"
+                                    (click)="genderMale($event.AT_TARGET.valueOf)"
+                                    >
+                                    <label class="form-check-label">Female</label> 
+                                    
+                                </div>
+                                @if(myForm.get('gender')?.hasError('required')) {
+                                    <div class="text-danger mt-3">* Select Gender</div>
+                                }
+
+                            </div>
+                        </div>
+
+                        <!--Add Qualification-->
+                        <div class="col-11 mt-4 ">
+                            <div class="d-inline ">Qualification</div>
+                            <button (click)="addQualification()" class="ms-4 btn btn-outline-info">Add Qualification</button>
+        
+                        </div>
+
+                        <div class="mt-3 " formArrayName="qualifications">
+                            <div *ngIf="qualification.length > 0 " class="row ">
+                                <div class="col-4 mt-2 "><label class="form-label ">Name</label></div>
+                                <div class="col mt-2 "><label class="form-label ">Year</label></div>
+                            </div>
+
+                            <div *ngFor="let item of qualification.controls; index as i" [formGroupName]="i">
+                                <div class="row ">
+                                    <div class="col mt-2">
+                                        <input formControlName="courseName" class="form-control " type="text" placeholder="Certificate Name">
+                                      
+                                    </div>
+                                    <div class="col mt-2">
+                                        <input formControlName="year" type="date" class="form-control" placeholder="Year">
+                                    </div>
+                                    <div class="col mt-2 ">
+                                        <button class="btn btn-danger" (click)="removeQualification(i)">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-11 mt-5 ">
+                            <button *ngIf="!id" class="btn btn-outline-primary" (click)="saveEmployee(myForm)">Submit</button>
+                            <button *ngIf="id" class="btn btn-primary" (click)="updateEmployee(myForm)">Update</button>
+                            <button class="ms-3 btn btn-outline-dark" (click)="cancel()">Cancel</button>
+                        </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
